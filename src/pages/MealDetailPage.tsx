@@ -1,5 +1,4 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ChefHat,
@@ -11,11 +10,12 @@ import {
   ShoppingBag,
   Tag,
 } from "lucide-react";
-import { fetchMeal, getIngredients } from "../api";
+import { getIngredients } from "../api";
+import { useMealDetail } from "../hooks";
 import { ErrorBox } from "../components/States";
 import { useMealStore } from "../store";
 
-// ดึง YouTube Embed URL จากลิงก์ปกติ เพื่อนำมาเล่นวิดีโอบนหน้าเว็บได้
+// ดึง YouTube URL 
 function getYouTubeEmbedUrl(url: string | null): string | null {
   if (!url) {
     return null;
@@ -33,20 +33,18 @@ function getYouTubeEmbedUrl(url: string | null): string | null {
 }
 
 export default function MealDetailPage() {
+  // 1. ดึง ID จาก Dynamic Route Parameter
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // ดึงข้อมูลสูตรอาหารแบบละเอียด
-  const mealQuery = useQuery({
-    queryKey: ["meal", id],
-    queryFn: () => fetchMeal(id),
-    staleTime: 1000 * 60 * 30, // 30 นาที
-  });
+  // 2. ดึง Server State Hook useMealDetail
+  const mealQuery = useMealDetail(id);
 
+  // 3. ดึง Client State  Action จาก Store
   const isFavorite = useMealStore((state) => state.favorites.includes(id));
   const toggleFavorite = useMealStore((state) => state.toggleFavorite);
 
-  // กำลังโหลดข้อมูล
+
   if (mealQuery.isLoading) {
     return (
       <div className="space-y-6">
@@ -64,7 +62,7 @@ export default function MealDetailPage() {
     );
   }
 
-  // โหลดข้อมูลผิดพลาด
+ 
   if (mealQuery.isError) {
     return (
       <ErrorBox
@@ -76,7 +74,7 @@ export default function MealDetailPage() {
 
   const meal = mealQuery.data;
 
-  // ไม่พบข้อมูลสูตรอาหาร
+ 
   if (!meal) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -95,10 +93,11 @@ export default function MealDetailPage() {
     );
   }
 
+  //เอาข้อมูลมาประมวลแล้วแสดงรายละเอียดของสูตรอาหาร
   const ingredients = getIngredients(meal);
   const youtubeEmbedUrl = getYouTubeEmbedUrl(meal.strYoutube);
 
-  // แยกข้อความวิธีทำออกเป็นย่อหน้าให้อ่านง่าย
+  // แยกข้อความวิธีทำเป็นย่อหน้า
   const instructionParagraphs = (meal.strInstructions || "")
     .split(/\r?\n/)
     .map((paragraph) => paragraph.trim())
@@ -138,9 +137,9 @@ export default function MealDetailPage() {
         </div>
       </div>
 
-      {/* ส่วนหัวของสูตรอาหาร (รูปภาพ และ กล่องจัดการ) */}
+      {/* หัวของสูตรอาหาร */}
       <div className="grid gap-6 lg:grid-cols-12 items-start">
-        {/* คอลัมน์ซ้าย: รูปภาพและปุ่มแอ็กชัน */}
+        {/* รูปภาพและปุ่ม */}
         <div className="space-y-4 lg:col-span-5">
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
             <img
@@ -167,7 +166,7 @@ export default function MealDetailPage() {
               </span>
             </button>
 
-            {/* ลิงก์ภายนอก: YouTube และ เว็บไซต์ต้นฉบับ */}
+            {/* ลิงก์ YouTube และ เว็บต้นฉบับ */}
             <div className="flex flex-wrap gap-2 pt-0.5">
               {meal.strYoutube && (
                 <a
@@ -196,7 +195,7 @@ export default function MealDetailPage() {
           </div>
         </div>
 
-        {/* คอลัมน์ขวา: ข้อมูลหมวดหมู่ ชื่ออาหาร และ เช็คลิสต์ส่วนผสม */}
+        {/* หมวดหมู่ อาหาร และ ลิสส่วนผสม */}
         <div className="space-y-5 lg:col-span-7">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
@@ -228,7 +227,7 @@ export default function MealDetailPage() {
             </h1>
           </div>
 
-          {/* รายการส่วนผสมและเครื่องปรุง */}
+          {/* รายการส่วนผสมเครื่องปรุง */}
           <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-4">
             <div className="border-b border-gray-200 pb-3">
               <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -264,7 +263,7 @@ export default function MealDetailPage() {
         </div>
       </div>
 
-      {/* ขั้นตอนการทำอาหาร */}
+      {/* ขั้นตอนการทำ */}
       <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-xs space-y-4">
         <div className="flex items-center gap-2.5 border-b border-gray-200 pb-3">
           <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
@@ -292,7 +291,7 @@ export default function MealDetailPage() {
         </div>
       </section>
 
-      {/* วิดีโอสอนทำอาหารจาก YouTube */}
+      {/* คลิปสอน*/}
       {youtubeEmbedUrl && (
         <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
           <div className="flex items-center gap-2 font-bold text-base text-gray-900">

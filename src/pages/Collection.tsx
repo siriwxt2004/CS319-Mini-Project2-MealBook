@@ -6,13 +6,17 @@ import MealCard from "../components/MealCard";
 import { GridSkeleton } from "../components/States";
 
 export default function Collection() {
+  // 1. ดึงArray ของ ID จากStore
   const favoriteIds = useMealStore((state) => state.favorites);
+
+  // 2. ดึง Server State Hook useMeals useQueries เเพื่อ Batch Fetch
   const mealQueries = useMeals(favoriteIds);
 
+  // 3. ตรวจสถานะ Loading Error จาก Queries 
   const isLoading = mealQueries.some((queryResult) => queryResult.isLoading);
   const hasError = mealQueries.some((queryResult) => queryResult.isError);
 
-  // สั่งให้ query ที่เกิด error ลองดึงข้อมูลใหม่อีกครั้ง
+  // 4. ฟังก์ชันสั่ง query ที่ error ลองดึงข้อมูลใหม่ Retry
   const handleRetryFailedQueries = () => {
     mealQueries.forEach((queryResult) => {
       if (queryResult.isError) {
@@ -23,7 +27,7 @@ export default function Collection() {
 
   return (
     <div className="space-y-6">
-      {/* ส่วนหัวของหน้าสูตรของฉัน */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-xs">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -58,7 +62,7 @@ export default function Collection() {
         )}
       </div>
 
-      {/* หน้าจอเมื่อยังไม่มีสูตรอาหารในรายการโปรด */}
+
       {favoriteIds.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white py-14 px-6 text-center space-y-3">
           <div className="flex size-14 items-center justify-center rounded-full bg-red-50 text-red-500">
@@ -83,12 +87,12 @@ export default function Collection() {
         </div>
       )}
 
-      {/* ระหว่างรอโหลดข้อมูล */}
+      {/* ระหว่างรอโหลด */}
       {isLoading && (
         <GridSkeleton count={Math.min(favoriteIds.length || 4, 8)} />
       )}
 
-      {/* แจ้งเตือนเมื่อโหลดสูตรอาหารบางรายการไม่สำเร็จ */}
+      {/* แจ้งเตือน */}
       {hasError && (
         <div
           role="alert"

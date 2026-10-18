@@ -16,7 +16,7 @@ interface NavItem {
   Icon: LucideIcon;
 }
 
-// รายการลิงก์สำหรับแถบเมนูหลัก
+
 const NAV_LINKS: NavItem[] = [
   { to: "/", label: "สูตรอาหาร", Icon: CookingPot },
   { to: "/collection", label: "สูตรของฉัน", Icon: Heart },
@@ -30,7 +30,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
-      {/* ส่วนหัวของเว็บ (Navbar) เรียบง่าย สะอาดตา */}
+      {/* ส่วนหัวของเว็บ*/}
       <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white shadow-xs">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           {/* โลโก้เว็บไซต์ */}
@@ -87,7 +87,7 @@ export default function Layout() {
             })}
           </nav>
 
-          {/* เมนูสำหรับหน้าจอมือถือ (Mobile Dropdown) */}
+
           <div className="dropdown dropdown-end md:hidden">
             <div
               tabIndex={0}
@@ -144,12 +144,12 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* พื้นที่แสดงเนื้อหาของแต่ละหน้า */}
+      {/* เนื้อหาของแต่ละหน้า */}
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
         <Outlet />
       </main>
 
-      {/* ส่วนท้ายของเว็บ (Footer) เรียบง่าย */}
+
       <footer className="mt-auto border-t border-gray-200 bg-white py-6 text-gray-600">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 text-xs">
           <div className="flex items-center gap-2.5">

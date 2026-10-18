@@ -6,6 +6,7 @@ import { useMealStore } from "../store";
 import { DAYS, type Day, type MealDetail } from "../types";
 
 export default function Planner() {
+  // 1. ดึงรายการ favorites และ plan 
   const favorites = useMealStore((state) => state.favorites);
   const plan = useMealStore((state) => state.plan);
   const setPlan = useMealStore((state) => state.setPlan);
@@ -15,11 +16,11 @@ export default function Planner() {
     (mealId): mealId is string => typeof mealId === "string" && mealId.length > 0
   );
 
-  // ดึงรายละเอียดอาหารจาก ID ที่จำเป็น (รายการโปรด + ที่อยู่ในแผน)
+  // 2. ดึง Server State Custom Hook useMeals TanStack Quer  ID ที่จำเป็น
   const mealIdsToFetch = Array.from(new Set([...favorites, ...plannedMealIds]));
   const mealQueries = useMeals(mealIdsToFetch);
 
-  // สร้าง Map เพื่อค้นหาข้อมูลสูตรอาหารจาก ID ได้สะดวก
+  // Map ค้นสูตรอาหารจาก ID 
   const mealsMap = new Map<string, MealDetail>();
   for (const queryResult of mealQueries) {
     if (queryResult.data) {
@@ -29,6 +30,7 @@ export default function Planner() {
 
   const plannedCount = DAYS.filter((dayName) => Boolean(plan[dayName])).length;
 
+  // 3. ตรวจ Loading Error และฟังก์ชัน Retry
   const hasAnyData = mealQueries.some((queryResult) => Boolean(queryResult.data));
   const isLoading = mealQueries.some((queryResult) => queryResult.isLoading);
   const hasError = mealQueries.some((queryResult) => queryResult.isError);
@@ -48,19 +50,13 @@ export default function Planner() {
 
   return (
     <div className="space-y-6">
-      {/* เฮดเดอร์ของหน้า */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-xs">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <CalendarDays className="size-6 text-emerald-600" aria-hidden="true" />
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">แผนมื้ออาหาร</h1>
-            <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
-              {plannedCount}/7 วัน
-            </span>
+
           </div>
-          <p className="text-xs text-gray-500">
-            เลือกสูตรจากรายการโปรดเพื่อจัดตารางอาหาร 7 วัน
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -84,7 +80,7 @@ export default function Planner() {
         </div>
       </div>
 
-      {/* กรณียังไม่มีสูตรโปรด */}
+
       {favorites.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white py-14 px-6 text-center space-y-3">
           <div className="flex size-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
@@ -108,7 +104,6 @@ export default function Planner() {
         </div>
       )}
 
-      {/* Loading state ระหว่างเรียก API (แสดงแบบเต็มหน้าเฉพาะตอนยังไม่มี data เลย) */}
       {favorites.length > 0 && !hasAnyData && isLoading && (
         <div className="space-y-4">
           <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
@@ -141,7 +136,7 @@ export default function Planner() {
         </div>
       )}
 
-      {/* Error state + Retry */}
+
       {favorites.length > 0 && hasError && firstError && (
         <ErrorBox error={firstError} onRetry={handleRetry} />
       )}
@@ -162,7 +157,7 @@ export default function Planner() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h2 className="text-base font-bold text-gray-900">{dayName}</h2>
-                    <p className="text-xs text-gray-500">เลือกเมนูจากรายการโปรด</p>
+                    
                   </div>
 
                   {selectedMealId.length > 0 && (
@@ -200,9 +195,7 @@ export default function Planner() {
                   </select>
                 </div>
 
-                {selectedMealId.length === 0 && (
-                  <p className="mt-3 text-xs text-gray-500">ยังไม่ได้เลือกเมนู</p>
-                )}
+
 
                 {selectedMealId.length > 0 && selectedMeal && (
                   <div className="mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">

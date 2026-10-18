@@ -2,22 +2,23 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Day } from "./types";
 
-// State ของ Zustand: เก็บเฉพาะ Client State (รหัส ID) เท่านั้น ไม่เก็บ Server Data
+// 1. กำหนด Type ของ State และ Action เก็บเฉพาะ Client State
 interface MealState {
-  favorites: string[];
-  plan: Partial<Record<Day, string>>;
-  toggleFavorite: (id: string) => void;
-  setPlan: (day: Day, id: string) => void;
-  clearPlan: () => void;
+  favorites: string[];                    // เก็บ Array ของ ID สูตรอาหาร
+  plan: Partial<Record<Day, string>>;     // เก็บแผนมื้ออาหาร 7 วัน คู่กับ ID สูตรอาหาร
+  toggleFavorite: (id: string) => void;   // ฟังก์ชันสลับสถานะ Favorite พิ่ม/ลบ
+  setPlan: (day: Day, id: string) => void;// ฟังก์ชันกำหนด ID อาหารในแต่ละวัน
+  clearPlan: () => void;                  // ฟังก์ชันล้างแผนอาหาร
 }
 
+// 2. สร้าง Store ด้วย create ครอบด้วย persist เก็บลง LocalStorage 
 export const useMealStore = create<MealState>()(
   persist(
     (set) => ({
       favorites: [],
       plan: {},
 
-      // เพิ่มหรือลบสูตรอาหารออกจากรายการโปรด
+      // เพิ่มลบสูตรรายการโปรด
       toggleFavorite: (id: string) => {
         set((state) => {
           const isAlreadyFavorite = state.favorites.includes(id);
@@ -34,7 +35,7 @@ export const useMealStore = create<MealState>()(
         });
       },
 
-      // กำหนดสูตรอาหารสำหรับวันในสัปดาห์ (ถ้า id ว่างจะลบออก)
+      // กำหนดสูตรอาหาร id ว่างจะลบออก)
       setPlan: (day: Day, id: string) => {
         set((state) => {
           const updatedPlan = { ...state.plan };
@@ -49,7 +50,7 @@ export const useMealStore = create<MealState>()(
         });
       },
 
-      // ล้างแผนมื้ออาหารทั้งหมด
+      // ล้างแผนทั้งหมด
       clearPlan: () => {
         set({ plan: {} });
       },

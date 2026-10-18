@@ -7,7 +7,6 @@ import type {
 
 const BASE_URL = "https://www.themealdb.com/api/json/v1/1";
 
-// ฟังก์ชันกลางสำหรับเรียก fetch ข้อมูลจาก API
 async function get<T>(path: string): Promise<T> {
   const response = await fetch(BASE_URL + path);
 
@@ -43,7 +42,7 @@ export async function fetchByCategory(
   return data.meals ?? [];
 }
 
-// ค้นหาสูตรอาหารจากคำค้นหา (keyword)
+// ค้นหาสูตรอาหารจากคำค้นหา 
 export async function searchMeals(searchQuery: string): Promise<MealSummary[]> {
   const encodedQuery = encodeURIComponent(searchQuery);
   const data = await get<MealsResponse<MealDetail>>(
@@ -53,7 +52,7 @@ export async function searchMeals(searchQuery: string): Promise<MealSummary[]> {
   return data.meals ?? [];
 }
 
-// ดึงข้อมูลสูตรอาหารแบบละเอียดด้วย ID
+// ดึงสูตรอาหาร ID
 export async function fetchMeal(mealId: string): Promise<MealDetail | null> {
   const encodedId = encodeURIComponent(mealId);
   const data = await get<MealsResponse<MealDetail>>(
@@ -64,7 +63,7 @@ export async function fetchMeal(mealId: string): Promise<MealDetail | null> {
   return meal;
 }
 
-// ดึงรายการส่วนผสมและปริมาณทั้งหมดจากข้อมูลสูตรอาหาร (มีสูงสุด 20 รายการ)
+// ดึงส่วนผสม
 export function getIngredients(meal: MealDetail): Ingredient[] {
   const ingredientList: Ingredient[] = [];
 

@@ -35,7 +35,6 @@ const TECH_STACK: TechItem[] = [
 export default function About() {
   return (
     <div className="space-y-6">
-      {/* ส่วนหัวแนะนำโครงงาน */}
       <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-xs space-y-2">
         <div className="inline-flex items-center gap-1.5 rounded-md bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
           <GraduationCap className="size-3.5" aria-hidden="true" />
@@ -44,7 +43,6 @@ export default function About() {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
           ผู้จัดทำ
         </h1>
-        {/* รายชื่อสมาชิกกลุ่มผู้พัฒนา */}
       <section className="space-y-3">
         <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
           <Users className="size-4 text-emerald-600" aria-hidden="true" />
@@ -57,7 +55,6 @@ export default function About() {
               key={member.studentId + index}
               className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center shadow-xs space-y-3"
             >
-              {/* รูปภาพโปรไฟล์หรือตัวอักษรย่อ */}
               <div>
                 {member.photo ? (
                   <img
@@ -72,7 +69,6 @@ export default function About() {
                 )}
               </div>
 
-              {/* รายละเอียดสมาชิก */}
               <div className="space-y-1 w-full">
                 <h3 className="text-base font-bold text-gray-900">
                   {member.name}
@@ -100,11 +96,10 @@ export default function About() {
 
       
 
-      {/* ส่วนแสดงเทคโนโลยีที่ใช้พัฒนา (Tech Stack) */}
       <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-xs space-y-3">
         <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
           <Wrench className="size-4 text-emerald-600" aria-hidden="true" />
-          <span>เทคโนโลยีที่ใช้พัฒนา (Tech Stack)</span>
+          <span>เทคโนโลยีที่ใช้ Tech Stack</span>
         </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -132,14 +127,14 @@ export default function About() {
         </div>
       </section>
 
-      {/* ส่วนอ้างอิงแหล่งที่มาของข้อมูล (API Attribution) */}
+
       <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-2 text-xs text-gray-600">
         <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
           <Globe className="size-4 text-emerald-600" aria-hidden="true" />
           <span>แหล่งที่มาของข้อมูล</span>
         </h2>
         <p className="leading-relaxed">
-          ข้อมูลสูตรอาหารจาก{" "}
+          ข้อมูลสูตรอาหาร{" "}
           <a
             href="https://www.themealdb.com"
             target="_blank"
@@ -160,7 +155,7 @@ export default function About() {
           )
         </p>
         <p className="text-gray-400">
-          ไอคอนจาก{" "}
+          ไอคอน{" "}
           <a
             href="https://lucide.dev"
             target="_blank"

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Beef,
@@ -16,13 +15,11 @@ import {
   X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { fetchByCategory, fetchCategories, searchMeals } from "../api";
+import { useCategories, useMealsList } from "../hooks";
 import MealCard from "../components/MealCard";
 import { ErrorBox, GridSkeleton } from "../components/States";
 
-const STALE_TIME = 1000 * 60 * 10; // 10 นาที
-
-// ไอคอนประจำหมวดหมู่อาหาร
+// ไอคอนหมวดหมู่
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Beef: Beef,
   Chicken: Drumstick,
@@ -40,36 +37,21 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Goat: Beef,
 };
 
-
-
-
 export default function Home() {
+  // 1. Local UI State สำหรับเลือกหมวดหมู่และคำค้น
   const [selectedCategory, setSelectedCategory] = useState("Seafood");
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ดึงรายชื่อหมวดหมู่ทั้งหมด
-  const categoriesQuery = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-    staleTime: STALE_TIME * 6,
-  });
+  // 2. ดึง Server State ผ่าน Custom Hooks
 
-  // ดึงข้อมูลสูตรอาหาร: ถ้ามีคำค้นหาให้ค้นหาด้วย keyword ถ้าไม่มีให้ค้นหาตามหมวดหมู่
-  const mealsQuery = useQuery({
-    queryKey: searchTerm
-      ? ["search", searchTerm]
-      : ["category", selectedCategory],
-    queryFn: () => {
-      if (searchTerm) {
-        return searchMeals(searchTerm);
-      }
-      return fetchByCategory(selectedCategory);
-    },
-    staleTime: STALE_TIME,
-  });
+  const categoriesQuery = useCategories();
 
-  // เมื่อผู้ใช้กดค้นหา
+  // 
+  const mealsQuery = useMealsList(selectedCategory, searchTerm);
+
+  // 3. ฟังก์ชันการค้นหา เปลี่ยนหมวดหมู่
+
   const handleSearchSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const cleanKeyword = searchInput.trim();
@@ -78,7 +60,7 @@ export default function Home() {
     }
   };
 
-  // ล้างการค้นหาเพื่อกลับมาดูตามหมวดหมู่
+  // ล้างการค้นหา
   const handleClearSearch = () => {
     setSearchTerm("");
     setSearchInput("");
@@ -101,11 +83,11 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
-      {/* ส่วน Banner ค้นหาเรียบง่าย */}
+      {/* Banner*/}
       <section className="rounded-xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs text-center space-y-4">
       
 
-        {/* ฟอร์มค้นหาอาหาร */}
+        {/* ค้นหาอาหาร */}
         <form
           onSubmit={handleSearchSubmit}
           className="mx-auto flex w-full max-w-xl items-center rounded-lg border border-gray-300 bg-white p-1 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600 transition-colors"
@@ -143,7 +125,7 @@ export default function Home() {
         
       </section>
 
-      {/* ส่วนเลือกหมวดหมู่อาหาร */}
+      {/* เลือกหมวดหมู่อาหาร */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
@@ -210,7 +192,7 @@ export default function Home() {
         )}
       </section>
 
-      {/* ส่วนแสดงผลลัพธ์รายการสูตรอาหาร */}
+      {/* รายการสูตรอาหาร */}
       <section className="space-y-4">
         {mealsData && mealsData.length > 0 && (
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-2">
@@ -238,10 +220,10 @@ export default function Home() {
           </div>
         )}
 
-        {/* สถานะกำลังโหลด */}
+
         {mealsQuery.isLoading && <GridSkeleton count={8} />}
 
-        {/* สถานะโหลดข้อมูลล้มเหลว */}
+
         {mealsQuery.isError && (
           <ErrorBox
             error={mealsQuery.error}
@@ -249,7 +231,7 @@ export default function Home() {
           />
         )}
 
-        {/* สถานะค้นหาแล้วไม่พบข้อมูล */}
+
         {mealsData && mealsData.length === 0 && (
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white py-14 px-4 text-center">
             <SearchX className="size-10 mb-2 text-gray-400" aria-hidden="true" />

@@ -1,11 +1,11 @@
-// ข้อมูลย่อของสูตรอาหารสำหรับแสดงผลในการ์ด
+// ข้อมูลในการ์ด
 export interface MealSummary {
   idMeal: string;
   strMeal: string;
   strMealThumb: string;
 }
 
-// ข้อมูลแบบละเอียดของสูตรอาหาร
+// ข้อมูลสูตรอาหาร
 export interface MealDetail extends MealSummary {
   strCategory: string | null;
   strArea: string | null;
@@ -16,18 +16,18 @@ export interface MealDetail extends MealSummary {
   [key: string]: string | null;
 }
 
-// โครงสร้าง Response ที่ตอบกลับมาจาก TheMealDB API
+
 export interface MealsResponse<T> {
   meals: T[] | null;
 }
 
-// ข้อมูลส่วนผสมและปริมาณ
+// ข้อมูลส่วนผสม
 export interface Ingredient {
   name: string;
   measure: string;
 }
 
-// รายชื่อวันในสัปดาห์สำหรับจัดแผนอาหาร
+
 export const DAYS = [
   "จันทร์",
   "อังคาร",

@@ -6,7 +6,7 @@ import Collection from "./pages/Collection";
 import Planner from "./pages/Planner";
 import About from "./pages/About";
 
-// กำหนดเส้นทาง (Routes) ทั้งหมดของระบบ
+// กำหนดเส้นทาง
 export const router = createBrowserRouter([
   {
     path: "/",
