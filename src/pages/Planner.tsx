@@ -88,11 +88,9 @@ export default function Planner() {
           </div>
           <div className="space-y-1 max-w-md">
             <h3 className="text-base font-bold text-gray-800">
-              ยังไม่มีสูตรโปรดสำหรับจัดแผน
+              ไม่มีสูตรโปรดสำหรับจัดแผน
             </h3>
-            <p className="text-xs text-gray-500">
-              ไปเลือกสูตรที่ชอบจากหน้าหลัก แล้วกดปุ่มหัวใจเพื่อบันทึกไว้ก่อน
-            </p>
+            
           </div>
           <Link
             to="/"

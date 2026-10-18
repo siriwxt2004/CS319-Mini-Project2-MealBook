@@ -70,19 +70,16 @@ export default function Collection() {
           </div>
           <div className="space-y-1 max-w-md">
             <h3 className="text-base font-bold text-gray-800">
-              ยังไม่มีสูตรอาหารที่บันทึกไว้
+              ไม่มีสูตรอาหารที่บันทึก
             </h3>
-            <p className="text-xs text-gray-500">
-              กดปุ่มหัวใจที่มุมของการ์ดสูตรอาหาร เพื่อบันทึกไว้ในหน้านี้
-              และนำไปจัดตารางมื้ออาหารได้ง่ายๆ
-            </p>
+            
           </div>
           <Link
             to="/"
             className="btn btn-sm bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-5 gap-1.5 border-none mt-2"
           >
             <CookingPot className="size-4" aria-hidden="true" />
-            <span>เริ่มค้นหาและเลือกสูตรอาหาร</span>
+            <span>ค้นหาและเลือกสูตรอาหาร</span>
           </Link>
         </div>
       )}
