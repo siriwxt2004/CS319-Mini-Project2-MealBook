@@ -25,10 +25,6 @@ export default function Login() {
   return (
     <section className="mx-auto max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-xs sm:p-8">
       <h1 className="text-2xl font-bold text-gray-900">เข้าสู่ระบบ</h1>
-      <p className="mt-2 text-sm text-gray-600">
-        ใช้อีเมลและรหัสผ่านเพื่อเปิดคอลเลกชันส่วนตัว
-        หากเป็นอีเมลใหม่ ระบบจะสร้างบัญชีให้โดยอัตโนมัติ
-      </p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
         <label className="form-control">
@@ -72,10 +68,7 @@ export default function Login() {
         </button>
       </form>
 
-      <p className="mt-4 text-xs leading-relaxed text-gray-500">
-        ระบบตัวอย่างสำหรับการศึกษาเท่านั้น รหัสผ่านเก็บแบบไม่เข้ารหัส
-        ห้ามใช้รหัสผ่านจริงหรือรหัสผ่านที่ใช้กับบริการอื่น
-      </p>
+      
     </section>
   );
 }
