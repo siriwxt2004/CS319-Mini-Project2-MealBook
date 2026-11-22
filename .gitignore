@@ -14,10 +14,18 @@ node_modules/
 dist/
 dist-ssr/
 
-# Local env files
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
 *.local
 .env.local
 .env.*.local
+
+# Generated archives
+*.zip
+*.rar
+*.7z
 
 # Editor directories and files
 .vscode/*
